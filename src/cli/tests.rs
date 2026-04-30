@@ -5,7 +5,10 @@ fn extract_version_pulls_version_from_word_separated_output() {
     // git: "git version 2.51.0"
     assert_eq!(extract_version("git version 2.51.0"), "2.51.0");
     // pandoc: "pandoc 3.1.11.1\n..."
-    assert_eq!(extract_version("pandoc 3.1.11.1\nFeatures: ..."), "3.1.11.1");
+    assert_eq!(
+        extract_version("pandoc 3.1.11.1\nFeatures: ..."),
+        "3.1.11.1"
+    );
     // persona: "persona 1.0.14"
     assert_eq!(extract_version("persona 1.0.14"), "1.0.14");
 }
