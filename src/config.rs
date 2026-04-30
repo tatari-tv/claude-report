@@ -52,7 +52,9 @@ impl TryFrom<Cli> for Config {
     fn try_from(cli: Cli) -> Result<Self> {
         let log_level = cli.log_level.clone();
         let command = match cli.command {
-            crate::cli::Command::Collect(args) => ResolvedCommand::Collect(collect_config_from_args(args)?),
+            crate::cli::Command::Collect(args) => {
+                ResolvedCommand::Collect(collect_config_from_args(args)?)
+            }
             crate::cli::Command::Render(args) => {
                 let pdf = args.pdf;
                 let input = args.input.unwrap_or_else(|| PathBuf::from(DEFAULT_OUTPUT));
@@ -66,7 +68,9 @@ impl TryFrom<Cli> for Config {
                     pdf_engine: args.pdf_engine,
                 })
             }
-            crate::cli::Command::Merge(args) => ResolvedCommand::Merge(MergeConfig { inputs: args.inputs }),
+            crate::cli::Command::Merge(args) => ResolvedCommand::Merge(MergeConfig {
+                inputs: args.inputs,
+            }),
         };
         Ok(Config { command, log_level })
     }
@@ -111,7 +115,8 @@ fn default_projects_dir() -> Option<PathBuf> {
 
 fn first_of_month_local_midnight() -> DateTime<Utc> {
     let now = Local::now();
-    let date = NaiveDate::from_ymd_opt(now.year(), now.month(), 1).expect("first of current month is always valid");
+    let date = NaiveDate::from_ymd_opt(now.year(), now.month(), 1)
+        .expect("first of current month is always valid");
     let dt = NaiveDateTime::new(date, NaiveTime::MIN);
     let local = Local
         .from_local_datetime(&dt)
@@ -134,7 +139,10 @@ fn parse_datetime(s: &str) -> Result<DateTime<Utc>> {
             .ok_or_else(|| eyre::eyre!("date {} does not resolve to a local instant", s))?;
         return Ok(local.with_timezone(&Utc));
     }
-    bail!("could not parse datetime '{}': expected RFC 3339 or YYYY-MM-DD", s)
+    bail!(
+        "could not parse datetime '{}': expected RFC 3339 or YYYY-MM-DD",
+        s
+    )
 }
 
 #[cfg(test)]
