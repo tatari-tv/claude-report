@@ -136,11 +136,7 @@ fn looks_like_version(s: &str) -> Option<&str> {
 
 fn get_tool_validation_help() -> String {
     let tools: &[(&str, &str, &str)] = &[
-        (
-            "persona",
-            "--version",
-            "cr render: persona block in context",
-        ),
+        ("persona", "--version", "cr render: persona block in context"),
         ("pandoc", "--version", "cr render --pdf"),
         ("git", "--version", "cr collect: repo detection"),
         ("jq", "--version", "cr collect: query JSON report output"),
@@ -152,11 +148,7 @@ fn get_tool_validation_help() -> String {
         .collect();
 
     let max_name = entries.iter().map(|(_, n, _)| n.len()).max().unwrap_or(0);
-    let max_ver = entries
-        .iter()
-        .map(|(s, _, _)| s.version.len())
-        .max()
-        .unwrap_or(0);
+    let max_ver = entries.iter().map(|(s, _, _)| s.version.len()).max().unwrap_or(0);
 
     let mut help = String::from("REQUIRED TOOLS:\n");
     for (status, name, purpose) in &entries {
